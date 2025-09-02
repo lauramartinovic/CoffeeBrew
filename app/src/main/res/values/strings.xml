@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CoffeeBrew</string>
+    <string name="add">Add</string>
+    <string name="unknown">N/A</string>
+</resources>
