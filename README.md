@@ -1,30 +1,30 @@
 # CoffeeBrew App
 
-Mobilna aplikacija napravljena u Kotlinu.  
-Aplikacija omogućuje dodavanje, uređivanje, brisanje i pregled unosa o pripremama kave.  
+Mobile application made in Kotlin.  
+The app lets you add, edit, delete and view records of coffee brews.  
 
-## Što aplikacija radi
-- prikazuje listu svih unosa (naziv kave, roaster, metoda i datum)
-- omogućuje dodavanje novog unosa
-- svaki unos ima:
-  - naziv kave
+## What the app does
+- shows a list of all brews (coffee name, roaster, method and date)
+- add a new brew with details
+- each record has:
+  - coffee name
   - roaster
-  - metoda pripreme (odabir iz fiksnog popisa: V60, Aeropress, French Press, Espresso, Moka)
-  - datum pripreme
-  - slika (odabrana s uređaja)
-- unose je moguće uređivati i brisati
+  - brew method (choose from fixed list: V60, Aeropress, French Press, Espresso, Moka)
+  - brew date
+  - image (picked from the device)
+- records can be edited or deleted
 
-## Korištene tehnologije
+## Used technologies
 - Kotlin
-- MVVM arhitektura
-- Room baza podataka
+- MVVM architecture
+- Room database
 - ViewBinding
 - RecyclerView
-- DatePicker + Spinner za odabir datuma i metode
-- Coil za prikaz slika
-- Ikona aplikacije izrađena u GIMP-u
+- DatePicker + Spinner for choosing date and method
+- Coil for displaying images
+- Custom app icon made in GIMP
 
-## Pokretanje
-Projekt se otvara u Android Studiju.  
-Potrebno je imati instaliran JDK 17 i minimalno Android SDK 24.  
- 
+## How to run
+Open the project in Android Studio.  
+You need JDK 17 and minimum Android SDK 24.  
+
