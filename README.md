@@ -3,7 +3,7 @@
 Mobile application made in Kotlin.  
 The app lets you add, edit, delete and view records of coffee brews.  
 
-## What the app does
+## Features
 - shows a list of all brews (coffee name, roaster, method and date)
 - add a new brew with details
 - each record has:
@@ -14,7 +14,7 @@ The app lets you add, edit, delete and view records of coffee brews.
   - image (picked from the device)
 - records can be edited or deleted
 
-## Used technologies
+## Technologies
 - Kotlin
 - MVVM architecture
 - Room database
