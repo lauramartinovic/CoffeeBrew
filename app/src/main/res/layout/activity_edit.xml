@@ -2,105 +2,123 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
+    <!-- Jedini direktni child ScrollView-a -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:text="Coffee name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/edtName"
+        <!-- Toolbar na vrhu -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="e.g. Ethiopia Yirgacheffe" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:title="Edit coffee" />
 
-        <TextView
-            android:text="Roaster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
-
-        <EditText
-            android:id="@+id/edtRoaster"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="e.g. Kava d.d." />
-
-        <TextView
-            android:text="Brew method"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
-
-        <Spinner
-            android:id="@+id/spnMethod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:text="Brew date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
-
-        <Button
-            android:id="@+id/btnPickDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose date" />
-
-        <ImageView
-            android:id="@+id/imgPreview"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="12dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/unknown" />
-
-        <!-- Gumbi: Take photo | Save | Cancel -->
+        <!-- Sadržaj ekrana -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:text="Coffee name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/edtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Ethiopia Yirgacheffe" />
+
+            <TextView
+                android:text="Roaster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
+
+            <EditText
+                android:id="@+id/edtRoaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Kava d.d." />
+
+            <TextView
+                android:text="Brew method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
+
+            <Spinner
+                android:id="@+id/spnMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Brew date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
 
             <Button
-                android:id="@+id/btnTakePhoto"
-                android:layout_width="0dp"
+                android:id="@+id/btnPickDate"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Take photo" />
+                android:text="Choose date" />
+
+            <ImageView
+                android:id="@+id/imgPreview"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/unknown" />
+
+            <!-- Gumbi: Take photo | Save | Cancel -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnTakePhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Take photo" />
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Save"
+                    android:layout_marginStart="8dp" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btnSave"
-                android:layout_width="0dp"
+                android:id="@+id/btnDelete"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Save"
-                android:layout_marginStart="8dp" />
-
-            <Button
-                android:id="@+id/btnCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel"
-                android:layout_marginStart="8dp" />
+                android:text="Delete"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

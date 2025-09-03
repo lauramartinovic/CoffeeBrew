@@ -35,6 +35,10 @@ class CoffeeViewModel(app: Application) : AndroidViewModel(app) {
         if (id == null || id == 0L) repo.add(item) else repo.update(item)
     }
 
+
+    suspend fun findOnce(id: Long) = repo.find(id)
+
+
     fun delete(item: CoffeeBrew) = viewModelScope.launch {
         repo.delete(item)
     }
