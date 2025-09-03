@@ -4,12 +4,13 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import coil.load
 import org.unizd.rma.martinovic.databinding.ActivityEditBinding
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -30,6 +31,7 @@ class EditActivity : AppCompatActivity() {
 
     private val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
+
     private val pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         uri?.let {
             contentResolver.takePersistableUriPermission(
@@ -37,6 +39,17 @@ class EditActivity : AppCompatActivity() {
             )
             pickedUri = it.toString()
             b.imgPreview.load(it)
+        }
+    }
+
+    private var cameraOutputUri: Uri? = null
+
+    private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            cameraOutputUri?.let { uri ->
+                pickedUri = uri.toString()
+                b.imgPreview.load(uri)
+            }
         }
     }
 
@@ -52,10 +65,10 @@ class EditActivity : AppCompatActivity() {
             METHODS
         )
 
-        // Ako je edit
+
         currentId = intent.getLongExtra(EXTRA_ID, 0L).takeIf { it != 0L }
 
-        // Datum
+
         b.btnPickDate.text = df.format(pickedDate)
         b.btnPickDate.setOnClickListener {
             val cal = Calendar.getInstance().apply { time = pickedDate }
@@ -71,9 +84,21 @@ class EditActivity : AppCompatActivity() {
             ).show()
         }
 
+
         b.btnPickImage.setOnClickListener {
             pickImage.launch(arrayOf("image/*"))
         }
+
+
+        b.btnTakePhoto.setOnClickListener {
+            cameraOutputUri = createImageUri()
+            cameraOutputUri?.let { uri ->
+                takePicture.launch(uri)
+            } ?: run {
+                android.widget.Toast.makeText(this, "Cannot create image file", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         b.btnSave.setOnClickListener {
             val name = b.edtName.text.toString().trim()
@@ -89,9 +114,9 @@ class EditActivity : AppCompatActivity() {
             finish()
         }
 
+
         b.btnDelete.setOnClickListener {
             val id = currentId ?: return@setOnClickListener
-            // jednostavno brisanje: dohvat iz liste i delete
             val item = vm.list.value.firstOrNull { it.id == id }
             if (item != null) {
                 vm.delete(item)
@@ -99,7 +124,6 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
-        // Ako je edit, popuni polja (jednostavno iz current liste)
         currentId?.let { id ->
             val item = vm.list.value.firstOrNull { it.id == id }
             if (item != null) {
@@ -112,6 +136,25 @@ class EditActivity : AppCompatActivity() {
                 if (pickedUri.isNotBlank()) b.imgPreview.load(Uri.parse(pickedUri))
                 b.btnDelete.visibility = android.view.View.VISIBLE
             }
+        }
+    }
+
+    private fun createImageUri(): Uri? {
+        return try {
+            val time = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val fileName = "coffee_$time.jpg"
+            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
+            if (dir?.exists() != true) dir?.mkdirs()
+            val imageFile = File(dir, fileName)
+
+            FileProvider.getUriForFile(
+                this,
+                "org.unizd.rma.martinovic.fileprovider",
+                imageFile
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }

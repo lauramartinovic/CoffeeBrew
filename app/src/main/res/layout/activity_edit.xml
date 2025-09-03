@@ -10,27 +10,46 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView android:text="Coffee name" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView
+            android:text="Coffee name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="e.g. Ethiopia Yirgacheffe" />
 
-        <TextView android:text="Roaster" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+        <TextView
+            android:text="Roaster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
         <EditText
             android:id="@+id/edtRoaster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="e.g. Kava d.d." />
 
-        <TextView android:text="Brew method" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+        <TextView
+            android:text="Brew method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
         <Spinner
             android:id="@+id/spnMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView android:text="Brew date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
+        <TextView
+            android:text="Brew date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="match_parent"
@@ -42,8 +61,10 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginTop="12dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/unknown" />
 
+        <!-- Gumbi: Take photo | Pick image | Save -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,11 +72,19 @@
             android:layout_marginTop="8dp">
 
             <Button
+                android:id="@+id/btnTakePhoto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Take photo" />
+
+            <Button
                 android:id="@+id/btnPickImage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pick image" />
+                android:text="Pick image"
+                android:layout_marginStart="8dp" />
 
             <Button
                 android:id="@+id/btnSave"
