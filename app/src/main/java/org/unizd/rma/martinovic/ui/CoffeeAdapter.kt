@@ -21,7 +21,10 @@ class CoffeeAdapter(
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()
+
     }
+    fun getItemAt(position: Int): CoffeeBrew = items[position]
+
 
     inner class VH(val b: ItemCoffeeBinding) : RecyclerView.ViewHolder(b.root)
 

@@ -1,11 +1,11 @@
 package org.unizd.rma.martinovic.ui
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import coil.load
@@ -21,10 +21,12 @@ class EditActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ID = "id"
         private val METHODS = arrayOf("V60", "Aeropress", "French Press", "Espresso", "Moka")
+        private const val AUTH = "org.unizd.rma.martinovic.fileprovider"
     }
 
     private lateinit var b: ActivityEditBinding
     private val vm: CoffeeViewModel by viewModels()
+
     private var currentId: Long? = null
     private var pickedDate: Date = Date()
     private var pickedUri: String = ""
@@ -32,18 +34,7 @@ class EditActivity : AppCompatActivity() {
     private val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        uri?.let {
-            contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            pickedUri = it.toString()
-            b.imgPreview.load(it)
-        }
-    }
-
     private var cameraOutputUri: Uri? = null
-
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             cameraOutputUri?.let { uri ->
@@ -58,7 +49,7 @@ class EditActivity : AppCompatActivity() {
         b = ActivityEditBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        // Spinner – jednostavno postavljanje
+
         b.spnMethod.adapter = android.widget.ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
@@ -72,7 +63,8 @@ class EditActivity : AppCompatActivity() {
         b.btnPickDate.text = df.format(pickedDate)
         b.btnPickDate.setOnClickListener {
             val cal = Calendar.getInstance().apply { time = pickedDate }
-            DatePickerDialog(this,
+            DatePickerDialog(
+                this,
                 { _, y, m, d ->
                     cal.set(y, m, d, 0, 0, 0)
                     pickedDate = cal.time
@@ -84,19 +76,12 @@ class EditActivity : AppCompatActivity() {
             ).show()
         }
 
-
-        b.btnPickImage.setOnClickListener {
-            pickImage.launch(arrayOf("image/*"))
-        }
-
-
+        // Kamera (obavezna umjesto galerije)
         b.btnTakePhoto.setOnClickListener {
             cameraOutputUri = createImageUri()
             cameraOutputUri?.let { uri ->
                 takePicture.launch(uri)
-            } ?: run {
-                android.widget.Toast.makeText(this, "Cannot create image file", android.widget.Toast.LENGTH_SHORT).show()
-            }
+            } ?: toast("Cannot create image file")
         }
 
 
@@ -106,7 +91,12 @@ class EditActivity : AppCompatActivity() {
             val method = METHODS[b.spnMethod.selectedItemPosition]
 
             if (name.isEmpty() || roaster.isEmpty()) {
-                android.widget.Toast.makeText(this, "Name and Roaster are required", android.widget.Toast.LENGTH_SHORT).show()
+                toast("Name and Roaster are required")
+                return@setOnClickListener
+            }
+
+            if (pickedUri.isBlank()) {
+                toast("Please take a photo")
                 return@setOnClickListener
             }
 
@@ -115,14 +105,25 @@ class EditActivity : AppCompatActivity() {
         }
 
 
+        b.btnCancel.setOnClickListener {
+            finish()
+        }
         b.btnDelete.setOnClickListener {
             val id = currentId ?: return@setOnClickListener
             val item = vm.list.value.firstOrNull { it.id == id }
             if (item != null) {
-                vm.delete(item)
-                finish()
+                AlertDialog.Builder(this)
+                    .setTitle("Delete")
+                    .setMessage("Delete this coffee brew?")
+                    .setPositiveButton("Delete") { _, _ ->
+                        vm.delete(item)
+                        finish()
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
         }
+
 
         currentId?.let { id ->
             val item = vm.list.value.firstOrNull { it.id == id }
@@ -139,22 +140,19 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    private fun createImageUri(): Uri? {
-        return try {
-            val time = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val fileName = "coffee_$time.jpg"
-            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
-            if (dir?.exists() != true) dir?.mkdirs()
-            val imageFile = File(dir, fileName)
 
-            FileProvider.getUriForFile(
-                this,
-                "org.unizd.rma.martinovic.fileprovider",
-                imageFile
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    private fun createImageUri(): Uri? = try {
+        val time = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "coffee_$time.jpg"
+        val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
+        if (dir?.exists() != true) dir?.mkdirs()
+        val imageFile = File(dir, fileName)
+        FileProvider.getUriForFile(this, AUTH, imageFile)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
+
+    private fun toast(msg: String) =
+        android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
 }
